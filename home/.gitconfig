@@ -1,0 +1,8 @@
+[user]
+	name = KsLair
+	email = type.hundred@gmail.com
+[core]
+	editor = nvim
+[url "github.com:"]
+    InsteadOf = https://github.comm/
+    InsteadOf = KsLair@github.com
