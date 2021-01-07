@@ -1,3 +1,7 @@
+if &compatible
+  set nocompatible               " Be iMproved
+endif
+
 colorscheme desert
 set encoding=utf-8
 set number
@@ -20,10 +24,10 @@ set list                " show invisible char
 set listchars=tab:»-,eol:↲,extends:»,precedes:«,nbsp:%
 set display=lastline    " show long ine as much as possible
 set updatetime=1000
-
-if &compatible
-  set nocompatible               " Be iMproved
-endif
+set notimeout
+set makeprg=make\ -j8
+set termguicolors
+set pumblend=10
 
 " Required:
 set runtimepath+=/home/kat/.cache/dein/repos/github.com/Shougo/dein.vim
@@ -47,6 +51,7 @@ if dein#load_state('/home/kat/.cache/dein')
   call dein#add('ycm-core/YouCompleteMe', {'merged': 0})
   call dein#add('SirVer/ultisnips')
   call dein#add('honza/vim-snippets')
+  call dein#add('kana/vim-submode')
 
   " Required:
   call dein#end()
@@ -66,18 +71,28 @@ endif
 " YouCompleteMe Options
 let g:ycm_min_num_of_chars_for_completion = 3
 let g:ycm_add_preview_to_completeopt = 1
-let g:ycm_autoclose_preview_window_after_completion = 1
+let g:ycm_autoclose_preview_window_after_insertion = 1
 let g:ycm_goto_buffer_command = 'split-or-existing-window'
 
 " UltiSnips
 let g:UltiSnipsExpandTrigger="<C-j>"
+
+" submode
+call submode#enter_with('winsize', 'n', '', '<C-w><', '<C-w><')
+call submode#enter_with('winsize', 'n', '', '<C-w>>', '<C-w>>')
+call submode#enter_with('winsize', 'n', '', '<C-w>-', '<C-w>-')
+call submode#enter_with('winsize', 'n', '', '<C-w>+', '<C-w>+')
+call submode#map('winsize', 'n', '', '<', '<C-w><')
+call submode#map('winsize', 'n', '', '>', '<C-w>>')
+call submode#map('winsize', 'n', '', '-', '<C-w>-')
+call submode#map('winsize', 'n', '', '+', '<C-w>+')
 
 let mapleader = "\<Space>"
 nnoremap <leader>e :e ~/.config/nvim/init.vim<CR>
 nnoremap <leader>s :source ~/.config/nvim/init.vim<CR>
 nnoremap <leader>t :NERDTreeToggle<CR>
 tnoremap <silent> <Esc><Esc> <C-\><C-n>
-nnoremap <TAB> :tabn<CR>
+nnoremap <C-TAB> :tabn<CR>
 nnoremap <S-TAB> :tabN<CR>
 nnoremap <leader>gd :aboveleft YcmCompleter GoTo<CR>
 
@@ -91,3 +106,5 @@ autocmd Reloadable BufEnter * if tabpagenr('$') == 1 && winnr('$') == 1 && exist
 
 autocmd Reloadable WinEnter * if &buftype ==# 'terminal' | startinsert | endif
 autocmd Reloadable TermOpen * startinsert
+
+hi Pmenu ctermbg=gray guibg=gray
