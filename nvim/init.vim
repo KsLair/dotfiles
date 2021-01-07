@@ -19,7 +19,7 @@ set nobackup
 set list                " show invisible char
 set listchars=tab:»-,eol:↲,extends:»,precedes:«,nbsp:%
 set display=lastline    " show long ine as much as possible
-set updatetime=100
+set updatetime=1000
 
 if &compatible
   set nocompatible               " Be iMproved
@@ -44,6 +44,9 @@ if dein#load_state('/home/kat/.cache/dein')
   call dein#add('Xuyuanp/nerdtree-git-plugin')
   call dein#add('airblade/vim-gitgutter')
   call dein#add('tpope/vim-fugitive')
+  call dein#add('ycm-core/YouCompleteMe', {'merged': 0})
+  call dein#add('SirVer/ultisnips')
+  call dein#add('honza/vim-snippets')
 
   " Required:
   call dein#end()
@@ -60,21 +63,30 @@ if dein#check_install()
   call dein#install()
 endif
 
+" YouCompleteMe Options
+let g:ycm_min_num_of_chars_for_completion = 3
+let g:ycm_add_preview_to_completeopt = 1
+let g:ycm_autoclose_preview_window_after_completion = 1
+let g:ycm_goto_buffer_command = 'split-or-existing-window'
+
+" UltiSnips
+let g:UltiSnipsExpandTrigger="<C-j>"
+
 let mapleader = "\<Space>"
 nnoremap <leader>e :e ~/.config/nvim/init.vim<CR>
 nnoremap <leader>s :source ~/.config/nvim/init.vim<CR>
-nnoremap <leader>dt :NERDTreeToggle<CR>
-nnoremap <leader>df :NERDTreeFind<CR>
+nnoremap <leader>t :NERDTreeToggle<CR>
 tnoremap <silent> <Esc><Esc> <C-\><C-n>
 nnoremap <TAB> :tabn<CR>
 nnoremap <S-TAB> :tabN<CR>
+nnoremap <leader>gd :aboveleft YcmCompleter GoTo<CR>
 
 augroup Reloadable
     autocmd!
 augroup END
 
 autocmd Reloadable VimEnter * NERDTree | wincmd p
-autocmd Reloadable BufWinEnter * silent  if &buftype ==# '' && @% != '' | NERDTreeMirror | NERDTreeFind | wincmd p | endif
+autocmd Reloadable BufEnter * silent  if &buftype ==# '' && @% != '' | NERDTreeMirror | NERDTreeFind | wincmd p | endif
 autocmd Reloadable BufEnter * if tabpagenr('$') == 1 && winnr('$') == 1 && exists('b:NERDTree') && b:NERDTree.isTabTree() | quit | endif
 
 autocmd Reloadable WinEnter * if &buftype ==# 'terminal' | startinsert | endif
